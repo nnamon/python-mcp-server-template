@@ -9,7 +9,7 @@ This template provides a clean, simple starting point for building MCP servers. 
 ## Features
 
 - **Tools**: 2 example tools using `@mcp.tool()` decorators
-- **Resources**: 2 example resources with `@mcp.resource()` decorators  
+- **Resources**: 2 example resources with `@mcp.resource()` decorators
 - **Prompts**: 2 example prompts using `@mcp.prompt()` decorators
 - **Type Safety**: Pydantic models for validation
 - **Testing**: Basic test suite covering all functionality

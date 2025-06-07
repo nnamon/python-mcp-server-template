@@ -1,10 +1,10 @@
-# MCP Server Template Makefile
+# PLACEHOLDER_SERVER_DESCRIPTION Makefile
 
 .PHONY: help install test format lint run dev clean
 
 # Default target
 help:
-	@echo "MCP Server Template Commands"
+	@echo "PLACEHOLDER_SERVER_DESCRIPTION Commands"
 	@echo "============================"
 	@echo ""
 	@echo "  install    Install dependencies"
