@@ -285,6 +285,115 @@ docker-compose up mcp-server-prod
 docker run --rm -i your-mcp-server:latest
 ```
 
+## HTTP Streaming Configuration
+
+### Prerequisites
+
+Add HTTP dependencies to `pyproject.toml`:
+```toml
+dependencies = [
+    # ... existing dependencies
+    "fastapi>=0.104.0",
+    "uvicorn>=0.24.0"
+]
+```
+
+Install:
+```bash
+uv add fastapi uvicorn
+```
+
+### HTTP Server Setup
+
+Create `http_server.py`:
+```python
+import asyncio
+from fastapi import FastAPI, WebSocket
+from mcp.server.session import ServerSession
+from mcp.server.stdio import stdio_server
+from src.mcp_server_template.server import mcp
+
+app = FastAPI(title="MCP Server HTTP API")
+
+@app.websocket("/mcp")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    
+    async def read_stream():
+        while True:
+            data = await websocket.receive_text()
+            yield data.encode()
+    
+    async def write_stream(data):
+        await websocket.send_text(data.decode())
+    
+    async with stdio_server() as (read_stream, write_stream):
+        session = ServerSession(mcp, read_stream, write_stream)
+        await session.run()
+
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+```
+
+### Client Configuration
+
+Configure your MCP client for WebSocket transport:
+```json
+{
+  "mcpServers": {
+    "your-server-name": {
+      "transport": {
+        "type": "websocket",
+        "url": "ws://localhost:8000/mcp"
+      }
+    }
+  }
+}
+```
+
+### Docker HTTP Setup
+
+Update `Dockerfile`:
+```dockerfile
+# Add after existing content
+EXPOSE 8000
+CMD ["uvicorn", "http_server:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+Update `docker-compose.yml`:
+```yaml
+version: '3.8'
+services:
+  mcp-server-http:
+    build: .
+    ports:
+      - "8000:8000"
+    command: ["uvicorn", "http_server:app", "--host", "0.0.0.0", "--port", "8000"]
+```
+
+### Running
+
+Local development:
+```bash
+uvicorn http_server:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Docker:
+```bash
+docker build -t your-mcp-server:latest .
+docker run -p 8000:8000 your-mcp-server:latest
+```
+
+Production:
+```bash
+uvicorn http_server:app --host 0.0.0.0 --port 8000 --workers 4
+```
+
 ## Testing
 
 Run the test suite:

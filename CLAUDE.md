@@ -23,7 +23,11 @@ This is a **template repository** for creating MCP (Model Context Protocol) serv
 └── pyproject.toml           # Project configuration
 ```
 
-## CRITICAL: Template Initialization Workflow
+## CRITICAL: Template Detection & Initialization Workflow
+
+**FIRST: Check if this is still the template or a spawned project:**
+- If the directory name is `python-mcp-server-template`, this is the template repository
+- If the directory name is anything else, this is likely a spawned project that needs initialization
 
 **When a user first clones or uses this template, you MUST:**
 
