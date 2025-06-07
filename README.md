@@ -81,7 +81,24 @@ docker-compose.yml          # Docker orchestration
 
 ## Customization Guide
 
-Follow these steps to adapt the template for your specific use case:
+### Quick Start with Slash Command
+
+If you're using Claude Code, the fastest way to customize this template is with the built-in slash command:
+
+```
+/project:new-project
+```
+
+This command will automatically:
+- Detect if this is a spawned project
+- Guide you through project setup questions
+- Replace all placeholders with your values
+- Rename packages and update imports
+- Verify everything builds correctly
+
+### Manual Customization
+
+If you prefer to customize manually, follow these steps to adapt the template for your specific use case:
 
 ### 1. Update Project Metadata
 

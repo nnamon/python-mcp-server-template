@@ -29,7 +29,22 @@ This is a **template repository** for creating MCP (Model Context Protocol) serv
 - If the directory name is `python-mcp-server-template`, this is the template repository
 - If the directory name is anything else, this is likely a spawned project that needs initialization
 
-**When a user first clones or uses this template, you MUST:**
+**AUTOMATED INITIALIZATION: Use the `/project:new-project` slash command**
+
+For spawned projects, the fastest way to initialize is:
+```
+/project:new-project
+```
+
+This command will:
+- Detect if this is a spawned project automatically
+- Guide you through gathering project requirements
+- Replace all placeholders systematically
+- Rename packages and update imports
+- Verify the project builds correctly
+- Rewrite this CLAUDE.md file to be project-specific
+
+**MANUAL INITIALIZATION: When a user first clones or uses this template, you MUST:**
 
 1. **Assess the user's project needs:**
    - Ask: "What will your MCP server do? (e.g., 'manage databases', 'process documents', 'integrate with APIs')"
