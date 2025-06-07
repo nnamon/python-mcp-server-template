@@ -1,5 +1,5 @@
 """
-Test suite for MCP Server Template.
+Test suite for PLACEHOLDER_SERVER_DESCRIPTION.
 
 Simple tests for the basic MCP server functionality.
 """

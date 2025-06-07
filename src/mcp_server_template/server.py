@@ -1,7 +1,7 @@
 """
-MCP Server Template Implementation
+PLACEHOLDER_SERVER_DESCRIPTION Implementation
 
-A minimal MCP server template demonstrating the three core MCP primitives:
+A PLACEHOLDER_SERVER_DESCRIPTION demonstrating the three core MCP primitives:
 - Tools: Functions that can be called by the LLM
 - Resources: Data that can be read by the LLM
 - Prompts: Reusable prompt templates
@@ -10,7 +10,7 @@ A minimal MCP server template demonstrating the three core MCP primitives:
 from mcp.server.fastmcp import FastMCP
 
 # Initialize the FastMCP server
-mcp = FastMCP("MCP Server Template")
+mcp = FastMCP("PLACEHOLDER_SERVER_NAME")
 
 
 @mcp.tool()

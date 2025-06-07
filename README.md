@@ -9,7 +9,7 @@ This template provides a clean, simple starting point for building MCP servers. 
 ## Features
 
 - **Tools**: 2 example tools using `@mcp.tool()` decorators
-- **Resources**: 2 example resources with `@mcp.resource()` decorators  
+- **Resources**: 2 example resources with `@mcp.resource()` decorators
 - **Prompts**: 2 example prompts using `@mcp.prompt()` decorators
 - **Type Safety**: Pydantic models for validation
 - **Testing**: Basic test suite covering all functionality
@@ -81,9 +81,27 @@ docker-compose.yml          # Docker orchestration
 
 ## Customization Guide
 
-### Quick Start with Slash Command
+### Quick Start Options
 
-If you're using Claude Code, the fastest way to customize this template is with the built-in slash command:
+#### Option 1: Automated Script (Recommended)
+
+Run the initialization script for guided setup:
+
+```bash
+./initialize.sh
+```
+
+This script will:
+- Guide you through project setup questions
+- Replace all placeholders with your values
+- Rename packages and update imports
+- Run tests to verify everything works
+- Clean up template-specific files
+- Generate project-specific documentation
+
+#### Option 2: Claude Code Slash Command
+
+If you're using Claude Code, use the built-in slash command:
 
 ```
 /project:new-project
@@ -96,7 +114,7 @@ This command will automatically:
 - Rename packages and update imports
 - Verify everything builds correctly
 
-### Manual Customization
+#### Option 3: Manual Customization
 
 If you prefer to customize manually, follow these steps to adapt the template for your specific use case:
 

@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """
-Python MCP Server Template
+PLACEHOLDER_SERVER_DESCRIPTION
 
-A template MCP server built using the FastMCP framework from the MCP Python SDK.
-Replace this description and the package name with your specific use case.
+A PLACEHOLDER_SERVER_DESCRIPTION built using the FastMCP framework.
 
-This template demonstrates:
+This server provides:
 - Tool definitions with @mcp.tool() decorators
 - Resource handling with @mcp.resource() decorators
 - Pydantic models for type safety

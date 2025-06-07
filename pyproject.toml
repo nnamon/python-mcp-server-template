@@ -1,7 +1,7 @@
 [project]
-name = "python-mcp-server-template"
+name = "PLACEHOLDER_PACKAGE_NAME"
 version = "0.1.0"
-description = "A template for creating MCP servers in Python using FastMCP"
+description = "PLACEHOLDER_SERVER_DESCRIPTION"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [

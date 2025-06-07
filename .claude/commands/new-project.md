@@ -2,18 +2,37 @@
 
 This command helps you quickly initialize a new MCP server project from this template by replacing all placeholders with your project-specific values.
 
-## What this command will do:
+## Recommended Approach: Use the Bash Script First
 
-1. **Detect if this is a spawned project** (directory name != `python-mcp-server-template`)
-2. **Gather your project requirements** through interactive questions
-3. **Replace all placeholders** throughout the codebase with your values
-4. **Rename the package directory** from `mcp_server_template` to your package name
-5. **Update all import statements** to use your new package name
-6. **Verify the project builds** after customization
+**STEP 1: Run the automated initialization script**
 
-## Project Requirements:
+```bash
+./initialize.sh
+```
 
-I need to gather some information about your MCP server project:
+This script will handle most of the initialization automatically:
+- Interactive guided setup with input validation
+- Replace all placeholders systematically
+- Rename packages and update imports
+- Run tests to verify everything works
+- Generate project-specific documentation
+
+**STEP 2: Manual verification and Claude assistance**
+
+After running the script, use this slash command to have Claude verify and complete any remaining customization:
+
+## What this command will do (after initialize.sh):
+
+1. **Verify the initialization was complete** - check that all placeholders were properly replaced
+2. **Review the generated code** for any missed customizations
+3. **Help customize the actual MCP tools** - replace example tools with your specific functionality
+4. **Update data models** to match your use case
+5. **Add any additional configuration** needed for your specific server
+6. **Verify the project builds and tests pass** after customization
+
+## If you haven't run initialize.sh yet:
+
+If you prefer to do everything manually or the script didn't work, I can help gather requirements:
 
 1. **What will your MCP server do?** 
    - Examples: "manage databases", "process documents", "integrate with APIs", "analyze code"
@@ -42,25 +61,36 @@ After gathering your requirements, I will:
    grep -r "placeholder_" . --exclude-dir=.git
    ```
 
-2. **Replace these placeholders:**
+2. **Replace these placeholders in ALL files:**
    - `PLACEHOLDER_PROJECT_NAME` → your project directory name
    - `PLACEHOLDER_SERVER_NAME` → your server name for MCP client config
-   - `PLACEHOLDER_PACKAGE_NAME` → your Python package name
+   - `PLACEHOLDER_PACKAGE_NAME` → your Python package name (in pyproject.toml only)
    - `PLACEHOLDER_SERVER_DESCRIPTION` → your server description
    - `placeholder-mcp-server` → your Docker image name
    - `placeholder_package_name` → your package directory name
 
-3. **Rename package directory:**
+3. **Files that will be updated:**
+   - `pyproject.toml` - name and description
+   - `main.py` - description and docstring
+   - `src/mcp_server_template/server.py` - FastMCP server name and description
+   - `src/mcp_server_template/__init__.py` - package description
+   - `tests/test_server.py` - test descriptions
+   - `tests/__init__.py` - test package description
+   - `Makefile` - help text and comments
+   - `README.md` - all placeholder references
+   - `docker-compose.yml` - service names
+   - `CLAUDE.md` - all placeholder references
+
+4. **Rename package directory:**
    ```bash
    mv src/mcp_server_template src/your_package_name
    ```
 
-4. **Update all imports** in:
-   - `main.py`
-   - `tests/test_server.py`
-   - Any other files referencing the old package
-
-5. **Update project metadata** in `pyproject.toml`
+5. **Update all imports** in:
+   - `main.py` - import statement
+   - `tests/test_server.py` - import statement
+   - `pyproject.toml` - packages list
+   - `docker-compose.yml` - commented command examples
 
 6. **Run tests** to ensure everything works:
    ```bash
@@ -72,4 +102,11 @@ After gathering your requirements, I will:
 
 ## Ready to start?
 
-Please provide your answers to the questions above, and I'll transform this template into your custom MCP server project!
+**If you've already run `./initialize.sh`:**
+- Just let me know and I'll verify the initialization was complete and help with any remaining customization
+
+**If you haven't run the script yet:**
+- Please run `./initialize.sh` first for the best experience, then come back to this command
+- OR provide your answers to the questions above, and I'll do the manual transformation
+
+Either way, I'll help ensure your MCP server template becomes a fully customized project!

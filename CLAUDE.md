@@ -29,14 +29,21 @@ This is a **template repository** for creating MCP (Model Context Protocol) serv
 - If the directory name is `python-mcp-server-template`, this is the template repository
 - If the directory name is anything else, this is likely a spawned project that needs initialization
 
-**AUTOMATED INITIALIZATION: Use the `/project:new-project` slash command**
+**AUTOMATED INITIALIZATION: Multiple Options**
 
-For spawned projects, the fastest way to initialize is:
+For spawned projects, choose one of these initialization methods:
+
+**Option 1: Bash Script (Recommended for all users)**
+```bash
+./initialize.sh
+```
+
+**Option 2: Claude Code Slash Command (Claude Code users only)**
 ```
 /project:new-project
 ```
 
-This command will:
+Both methods will:
 - Detect if this is a spawned project automatically
 - Guide you through gathering project requirements
 - Replace all placeholders systematically

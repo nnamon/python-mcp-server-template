@@ -1,7 +1,7 @@
 """
-MCP Server Template Package
+PLACEHOLDER_SERVER_DESCRIPTION Package
 
-A template for creating MCP servers using FastMCP.
+PLACEHOLDER_SERVER_DESCRIPTION using FastMCP.
 """
 
 __version__ = "0.1.0"
