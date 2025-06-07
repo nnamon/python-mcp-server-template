@@ -118,6 +118,17 @@ gather_requirements() {
     if [[ -n "$input_project_name" ]]; then
         project_name="$input_project_name"
     fi
+    
+    # Repository URL for clone instructions
+    echo
+    echo "What is the URL of this repository?"
+    echo "This will be used in README.md clone instructions (e.g., 'https://github.com/user/repo.git')"
+    read -p "Repository URL: " repo_url
+    
+    while [[ -z "$repo_url" ]]; do
+        print_error "Repository URL cannot be empty."
+        read -p "Repository URL: " repo_url
+    done
 }
 
 # Function to replace placeholders in files
@@ -149,6 +160,7 @@ replace_placeholders() {
                 sed -i '' "s/PLACEHOLDER_SERVER_NAME/$server_name/g" "$file"
                 sed -i '' "s/PLACEHOLDER_PACKAGE_NAME/$package_name/g" "$file"
                 sed -i '' "s/PLACEHOLDER_PROJECT_NAME/$project_name/g" "$file"
+                sed -i '' "s|PLACEHOLDER_REPO_URL|$repo_url|g" "$file"
                 sed -i '' "s/placeholder-mcp-server/$docker_name/g" "$file"
                 sed -i '' "s/placeholder_package_name/$package_name/g" "$file"
             else
@@ -157,6 +169,7 @@ replace_placeholders() {
                 sed -i "s/PLACEHOLDER_SERVER_NAME/$server_name/g" "$file"
                 sed -i "s/PLACEHOLDER_PACKAGE_NAME/$package_name/g" "$file"
                 sed -i "s/PLACEHOLDER_PROJECT_NAME/$project_name/g" "$file"
+                sed -i "s|PLACEHOLDER_REPO_URL|$repo_url|g" "$file"
                 sed -i "s/placeholder-mcp-server/$docker_name/g" "$file"
                 sed -i "s/placeholder_package_name/$package_name/g" "$file"
             fi
@@ -372,6 +385,7 @@ show_summary() {
     echo "  🏷️  Server name: $server_name"  
     echo "  🐳 Docker image: $docker_name"
     echo "  📁 Project name: $project_name"
+    echo "  🔗 Repository URL: $repo_url"
     echo
     echo "Next steps:"
     echo "  1. Review and customize the tools in src/$package_name/server.py"
@@ -403,6 +417,7 @@ main() {
     echo "  Server name: $server_name"
     echo "  Docker image: $docker_name"
     echo "  Project name: $project_name"
+    echo "  Repository URL: $repo_url"
     echo
     
     read -p "Proceed with initialization? (y/N): " confirm
