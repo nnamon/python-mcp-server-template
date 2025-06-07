@@ -35,7 +35,22 @@ This is a **template repository** for creating MCP (Model Context Protocol) serv
    - Ask: "What will your MCP server do? (e.g., 'manage databases', 'process documents', 'integrate with APIs')"
    - Ask: "What would you like to name your package? (e.g., 'database_manager', 'document_processor')"
 
-2. **Perform template customization:**
+2. **Perform template customization by replacing ALL placeholders:**
+   
+   **CRITICAL: Find all placeholders first:**
+   ```bash
+   grep -r "PLACEHOLDER_" . --exclude-dir=.git
+   grep -r "placeholder-" . --exclude-dir=.git  
+   grep -r "placeholder_" . --exclude-dir=.git
+   ```
+   
+   **Replace these specific placeholders:**
+     - `PLACEHOLDER_PROJECT_NAME` → actual project directory name
+     - `PLACEHOLDER_SERVER_NAME` → server name for MCP client config
+     - `PLACEHOLDER_PACKAGE_NAME` → valid Python package name (lowercase, underscores)
+     - `PLACEHOLDER_SERVER_DESCRIPTION` → brief description of the server's purpose
+     - `placeholder-mcp-server` → Docker image name
+     - `placeholder_package_name` → Python package directory name
    - Rename `mcp_server_template` package throughout the codebase
    - Update `pyproject.toml` with new name, description, and metadata
    - Replace example tools/resources/prompts with placeholder stubs for their use case
@@ -387,10 +402,19 @@ These patterns provide production-ready implementations for common MCP server re
 ## Common Tasks Claude Should Help With
 
 ### Template Customization (First-time setup)
+- **Placeholder replacement**: Use `grep -r "PLACEHOLDER_" .` to find all placeholders to replace
 - **Package renaming**: Replace `mcp_server_template` in all files
-- **Import updates**: Update all import statements
+- **Import updates**: Update all import statements  
 - **Metadata updates**: Update `pyproject.toml` name, description, author
 - **Documentation**: Update README.md with project-specific information
+
+**Critical placeholders to replace:**
+- `PLACEHOLDER_PROJECT_NAME` - Project directory name
+- `PLACEHOLDER_SERVER_NAME` - MCP client server identifier
+- `PLACEHOLDER_PACKAGE_NAME` - Python package name (valid identifier)
+- `PLACEHOLDER_SERVER_DESCRIPTION` - Server description
+- `placeholder-mcp-server` - Docker image name
+- `placeholder_package_name` - Package directory name
 
 ### Feature Development
 - **Adding new MCP tools**: Guide implementation following FastMCP patterns

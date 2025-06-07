@@ -27,8 +27,8 @@ This template provides a clean, simple starting point for building MCP servers. 
 
 1. **Clone this template**:
    ```bash
-   git clone <this-repo> your-mcp-server
-   cd your-mcp-server
+   git clone <this-repo> PLACEHOLDER_PROJECT_NAME
+   cd PLACEHOLDER_PROJECT_NAME
    ```
 
 2. **Install dependencies**:
@@ -88,14 +88,14 @@ Follow these steps to adapt the template for your specific use case:
 Edit `pyproject.toml`:
 ```toml
 [project]
-name = "your-mcp-server-name"
-description = "Your server description"
+name = "placeholder-mcp-server-name"
+description = "PLACEHOLDER_SERVER_DESCRIPTION"
 ```
 
 Also update the hatch build configuration:
 ```toml
 [tool.hatch.build.targets.wheel]
-packages = ["src/your_package_name"]  # Change from mcp_server_template
+packages = ["src/placeholder_package_name"]  # Change from mcp_server_template
 ```
 
 ### 2. Rename the Package
@@ -104,20 +104,20 @@ Replace `mcp_server_template` throughout the codebase:
 
 ```bash
 # Rename the package directory
-mv src/mcp_server_template src/your_package_name
+mv src/mcp_server_template src/placeholder_package_name
 
 # Update import in main.py
 # Change: from src.mcp_server_template.server import mcp
-# To:     from src.your_package_name.server import mcp
+# To:     from src.placeholder_package_name.server import mcp
 
 # Update import in tests/test_server.py
 # Change: from src.mcp_server_template.server import (...)
-# To:     from src.your_package_name.server import (...)
+# To:     from src.placeholder_package_name.server import (...)
 ```
 
 ### 3. Replace the Example Tools
 
-Edit `src/your_package_name/server.py`:
+Edit `src/placeholder_package_name/server.py`:
 
 ```python
 @mcp.tool()
@@ -149,7 +149,7 @@ def your_prompt(input_data: str) -> str:
 
 ### 6. Update Data Models
 
-Edit `src/your_package_name/models.py`:
+Edit `src/placeholder_package_name/models.py`:
 ```python
 class YourDataModel(BaseModel):
     """Your domain-specific model"""
@@ -226,10 +226,10 @@ Configure your MCP client to use this server locally:
 ```json
 {
   "mcpServers": {
-    "your-server-name": {
+    "PLACEHOLDER_SERVER_NAME": {
       "command": "uv",
       "args": ["run", "mcp", "run", "main.py"],
-      "cwd": "/path/to/your-mcp-server"
+      "cwd": "/path/to/PLACEHOLDER_PROJECT_NAME"
     }
   }
 }
@@ -242,14 +242,14 @@ For containerized deployments, configure your MCP client to use the Docker conta
 ```json
 {
   "mcpServers": {
-    "your-server-name": {
+    "PLACEHOLDER_SERVER_NAME": {
       "command": "docker",
       "args": [
         "run",
         "--rm",
         "-i",
-        "--name", "your-mcp-server",
-        "your-mcp-server:latest"
+        "--name", "placeholder-mcp-server",
+        "placeholder-mcp-server:latest"
       ]
     }
   }
@@ -260,138 +260,67 @@ For containerized deployments, configure your MCP client to use the Docker conta
 - The `--rm` flag automatically removes the container when it exits
 - The `-i` flag keeps STDIN open for MCP communication
 - The `--name` flag assigns a name to the container for easier management
-- Build the image first with: `docker build -t your-mcp-server:latest .`
+- Build the image first with: `docker build -t placeholder-mcp-server:latest .`
 
 ## Docker Usage
 
 ### Build the Image
 ```bash
-docker build -t your-mcp-server:latest .
+docker build -t placeholder-mcp-server:latest .
 ```
 
 ### Development
 ```bash
-docker-compose up mcp-server-dev
+docker-compose up PLACEHOLDER_SERVER_NAME-dev
 ```
 
 ### Production
 ```bash
-docker-compose up mcp-server-prod
+docker-compose up PLACEHOLDER_SERVER_NAME-prod
 ```
 
 ### Manual Docker Run
 ```bash
 # Run the server container directly
-docker run --rm -i your-mcp-server:latest
+docker run --rm -i placeholder-mcp-server:latest
 ```
 
-## HTTP Streaming Configuration
+## Server-Sent Events (SSE) Configuration
 
-### Prerequisites
+### Local SSE Setup
 
-Add HTTP dependencies to `pyproject.toml`:
-```toml
-dependencies = [
-    # ... existing dependencies
-    "fastapi>=0.104.0",
-    "uvicorn>=0.24.0"
-]
-```
-
-Install:
+Run the MCP server with SSE transport:
 ```bash
-uv add fastapi uvicorn
-```
-
-### HTTP Server Setup
-
-Create `http_server.py`:
-```python
-import asyncio
-from fastapi import FastAPI, WebSocket
-from mcp.server.session import ServerSession
-from mcp.server.stdio import stdio_server
-from src.mcp_server_template.server import mcp
-
-app = FastAPI(title="MCP Server HTTP API")
-
-@app.websocket("/mcp")
-async def websocket_endpoint(websocket: WebSocket):
-    await websocket.accept()
-    
-    async def read_stream():
-        while True:
-            data = await websocket.receive_text()
-            yield data.encode()
-    
-    async def write_stream(data):
-        await websocket.send_text(data.decode())
-    
-    async with stdio_server() as (read_stream, write_stream):
-        session = ServerSession(mcp, read_stream, write_stream)
-        await session.run()
-
-@app.get("/health")
-async def health_check():
-    return {"status": "healthy"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+uv run mcp run main.py --transport sse --port 8000
 ```
 
 ### Client Configuration
 
-Configure your MCP client for WebSocket transport:
+Configure your MCP client for SSE transport:
 ```json
 {
   "mcpServers": {
-    "your-server-name": {
+    "PLACEHOLDER_SERVER_NAME": {
       "transport": {
-        "type": "websocket",
-        "url": "ws://localhost:8000/mcp"
+        "type": "sse",
+        "url": "http://localhost:8000/sse"
       }
     }
   }
 }
 ```
 
-### Docker HTTP Setup
+### Docker SSE Setup
 
-Update `Dockerfile`:
-```dockerfile
-# Add after existing content
-EXPOSE 8000
-CMD ["uvicorn", "http_server:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-Update `docker-compose.yml`:
-```yaml
-version: '3.8'
-services:
-  mcp-server-http:
-    build: .
-    ports:
-      - "8000:8000"
-    command: ["uvicorn", "http_server:app", "--host", "0.0.0.0", "--port", "8000"]
-```
-
-### Running
-
-Local development:
+Use the provided SSE service in `docker-compose.yml`:
 ```bash
-uvicorn http_server:app --host 0.0.0.0 --port 8000 --reload
+docker-compose up PLACEHOLDER_SERVER_NAME-sse
 ```
 
-Docker:
+Or build and run directly:
 ```bash
-docker build -t your-mcp-server:latest .
-docker run -p 8000:8000 your-mcp-server:latest
-```
-
-Production:
-```bash
-uvicorn http_server:app --host 0.0.0.0 --port 8000 --workers 4
+docker build -t placeholder-mcp-server:latest .
+docker run -p 8000:8000 placeholder-mcp-server:latest
 ```
 
 ## Testing

@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   # Development service with volume mounts for live code editing
-  mcp-server-dev:
+  PLACEHOLDER_SERVER_NAME-dev:
     build: 
       context: .
       dockerfile: Dockerfile
@@ -29,7 +29,7 @@ services:
     # command: ["uv", "run", "python", "-m", "src.mcp_server_template.server", "--host", "0.0.0.0", "--port", "8000"]
 
   # Production service without development mounts
-  mcp-server-prod:
+  PLACEHOLDER_SERVER_NAME-prod:
     build: 
       context: .
       dockerfile: Dockerfile
@@ -47,6 +47,21 @@ services:
     # ports:
     #   - "8000:8000"
     # command: ["uv", "run", "python", "-m", "src.mcp_server_template.server", "--host", "0.0.0.0", "--port", "8000"]
+
+  # SSE service for HTTP-based MCP communication
+  PLACEHOLDER_SERVER_NAME-sse:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+      # Add your custom environment variables here
+      # - API_KEY=${API_KEY}
+    restart: unless-stopped
+    command: ["uv", "run", "mcp", "run", "main.py", "--transport", "sse", "--port", "8000", "--host", "0.0.0.0"]
 
 volumes:
   uv-cache:
