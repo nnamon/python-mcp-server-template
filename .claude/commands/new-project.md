@@ -24,11 +24,12 @@ After running the script, use this slash command to have Claude verify and compl
 ## What this command will do (after initialize.sh):
 
 1. **Verify the initialization was complete** - check that all placeholders were properly replaced
-2. **Review the generated code** for any missed customizations
-3. **Help customize the actual MCP tools** - replace example tools with your specific functionality
-4. **Update data models** to match your use case
-5. **Add any additional configuration** needed for your specific server
-6. **Verify the project builds and tests pass** after customization
+2. **Confirm template files were cleaned up** - ensure initialize.sh and .claude/commands were removed
+3. **Review the generated code** for any missed customizations
+4. **Help customize the actual MCP tools** - replace example tools with your specific functionality
+5. **Update data models** to match your use case
+6. **Add any additional configuration** needed for your specific server
+7. **Verify the project builds and tests pass** after customization
 
 ## If you haven't run initialize.sh yet:
 
@@ -98,11 +99,21 @@ After gathering your requirements, I will:
    make lint
    ```
 
-7. **Rewrite CLAUDE.md** to be project-specific and remove template instructions
+7. **Clean up template-specific files:**
+   ```bash
+   # Remove the initialization script
+   rm initialize.sh
+   
+   # Remove template slash commands
+   rm -rf .claude/commands/
+   ```
+
+8. **Rewrite CLAUDE.md** to be project-specific and remove template instructions
 
 ## Ready to start?
 
 **If you've already run `./initialize.sh`:**
+- The script should have already cleaned up template files automatically
 - Just let me know and I'll verify the initialization was complete and help with any remaining customization
 
 **If you haven't run the script yet:**
