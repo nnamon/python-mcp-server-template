@@ -36,7 +36,7 @@ USER mcp
 
 # Set the default command
 # For stdio-based MCP servers (most common):
-CMD ["uv", "run", "mcp"]
+CMD ["uv", "run", "mcp", "run", "main.py"]
 
 # For HTTP-based MCP servers, uncomment and modify as needed:
 # CMD ["uv", "run", "python", "-m", "src.mcp_server_template.server"]
