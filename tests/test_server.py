@@ -4,7 +4,6 @@ Test suite for MCP Server Template.
 Simple tests for the basic MCP server functionality.
 """
 
-
 # Import the tools directly from the server module
 from src.mcp_server_template.server import (
     add_numbers,
