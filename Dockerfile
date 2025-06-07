@@ -16,8 +16,8 @@ RUN useradd --create-home --shell /bin/bash mcp
 # Set working directory
 WORKDIR /app
 
-# Copy dependency files
-COPY pyproject.toml uv.lock ./
+# Copy dependency files and README (needed for build)
+COPY pyproject.toml uv.lock README.md ./
 
 # Install dependencies
 RUN uv sync --frozen --no-dev
