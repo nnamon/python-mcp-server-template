@@ -66,6 +66,7 @@ After gathering your requirements, I will:
    - `PLACEHOLDER_SERVER_NAME` → your server name for MCP client config
    - `PLACEHOLDER_PACKAGE_NAME` → your Python package name (in pyproject.toml only)
    - `PLACEHOLDER_SERVER_DESCRIPTION` → your server description
+   - `PLACEHOLDER_REPO_URL` → your repository URL for clone instructions
    - `placeholder-mcp-server` → your Docker image name
    - `placeholder_package_name` → your package directory name
 

@@ -71,6 +71,7 @@ Both methods will:
      - `PLACEHOLDER_SERVER_NAME` → server name for MCP client config
      - `PLACEHOLDER_PACKAGE_NAME` → valid Python package name (lowercase, underscores)
      - `PLACEHOLDER_SERVER_DESCRIPTION` → brief description of the server's purpose
+     - `PLACEHOLDER_REPO_URL` → repository URL for clone instructions
      - `placeholder-mcp-server` → Docker image name
      - `placeholder_package_name` → Python package directory name
    - Rename `mcp_server_template` package throughout the codebase
@@ -435,6 +436,7 @@ These patterns provide production-ready implementations for common MCP server re
 - `PLACEHOLDER_SERVER_NAME` - MCP client server identifier
 - `PLACEHOLDER_PACKAGE_NAME` - Python package name (valid identifier)
 - `PLACEHOLDER_SERVER_DESCRIPTION` - Server description
+- `PLACEHOLDER_REPO_URL` - Repository URL for clone instructions
 - `placeholder-mcp-server` - Docker image name
 - `placeholder_package_name` - Package directory name
 
