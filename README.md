@@ -27,7 +27,7 @@ This template provides a clean, simple starting point for building MCP servers. 
 
 1. **Clone this template**:
    ```bash
-   git clone <this-repo> PLACEHOLDER_PROJECT_NAME
+   git clone PLACEHOLDER_REPO_URL PLACEHOLDER_PROJECT_NAME
    cd PLACEHOLDER_PROJECT_NAME
    ```
 
