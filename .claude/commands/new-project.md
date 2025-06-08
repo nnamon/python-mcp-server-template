@@ -2,24 +2,34 @@
 
 This command helps you quickly initialize a new MCP server project from this template by replacing all placeholders with your project-specific values.
 
-## Recommended Approach: Use the Bash Script First
+## CRITICAL WORKFLOW FOR CLAUDE CODE:
 
-**STEP 1: Run the automated initialization script**
+**When the user asks to initialize a new project, you MUST:**
 
-```bash
-./initialize.sh
-```
+1. **FIRST: Gather the user's requirements**
+   - What will the MCP server do?
+   - What should the package be named?
+   - What's the server name for MCP clients?
+   - What's the Docker image name?
+   - What's the repository URL?
 
-This script will handle most of the initialization automatically:
-- Interactive guided setup with input validation
-- Replace all placeholders systematically
-- Rename packages and update imports
-- Run tests to verify everything works
-- Generate project-specific documentation
+2. **THEN: Edit the initialize.sh script with the gathered values**
+   ```bash
+   # Edit the export variables at the top of initialize.sh:
+   export SERVER_DESCRIPTION="[user's description]"
+   export PACKAGE_NAME="[user's package name]"
+   export SERVER_NAME="[user's server name]"
+   export DOCKER_IMAGE_NAME="[user's docker image name]"
+   export PROJECT_NAME="[project name or leave empty for current dir]"
+   export REPOSITORY_URL="[user's repo URL]"
+   ```
 
-**STEP 2: Manual verification and Claude assistance**
+3. **FINALLY: Run the script**
+   ```bash
+   ./initialize.sh
+   ```
 
-After running the script, use this slash command to have Claude verify and complete any remaining customization:
+The script will handle everything automatically - no manual steps needed!
 
 ## What this command will do (after initialize.sh):
 
@@ -112,12 +122,20 @@ After gathering your requirements, I will:
 
 ## Ready to start?
 
-**If you've already run `./initialize.sh`:**
-- The script should have already cleaned up template files automatically
-- Just let me know and I'll verify the initialization was complete and help with any remaining customization
+**REMEMBER: The correct workflow is:**
+1. Gather requirements from the user
+2. Edit the export variables in initialize.sh
+3. Run ./initialize.sh
 
-**If you haven't run the script yet:**
-- Please run `./initialize.sh` first for the best experience, then come back to this command
-- OR provide your answers to the questions above, and I'll do the manual transformation
+**The script will automatically:**
+- Replace ALL placeholders
+- Rename the package directory  
+- Update all imports
+- Run tests to verify setup
+- Rewrite CLAUDE.md
+- Clean up template files
+- Show a summary of the configuration
 
-Either way, I'll help ensure your MCP server template becomes a fully customized project!
+**DO NOT attempt manual placeholder replacement** - the script handles everything!
+
+If the user has already run initialize.sh, verify the initialization was complete and help with any remaining customization of the actual MCP tools and functionality.
