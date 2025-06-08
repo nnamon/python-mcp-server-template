@@ -43,9 +43,23 @@ For spawned projects, choose one of these initialization methods:
 /project:new-project
 ```
 
-Both methods will:
+**Option 3: LLM/Automated Configuration (Recommended for LLMs)**
+LLMs can configure the template without interactive prompts by editing the export variables at the top of `initialize.sh`:
+```bash
+# Edit these variables in initialize.sh
+export SERVER_DESCRIPTION="Database management server"
+export PACKAGE_NAME="database_manager"
+export SERVER_NAME="database-manager"
+export DOCKER_IMAGE_NAME="database-mcp-server"
+export PROJECT_NAME="my-database-project"
+export REPOSITORY_URL="https://github.com/user/my-database-project.git"
+
+# Then run the script
+./initialize.sh
+```
+
+All methods will:
 - Detect if this is a spawned project automatically
-- Guide you through gathering project requirements
 - Replace all placeholders systematically
 - Rename packages and update imports
 - Verify the project builds correctly

@@ -3,6 +3,33 @@
 # MCP Server Template Initialization Script
 # This script automatically customizes the template for your specific use case
 
+# ============================================
+# CONFIGURATION VARIABLES
+# ============================================
+# Set these variables to customize your MCP server without interactive prompts.
+# Leave empty to use interactive mode.
+#
+# USAGE FOR LLMs/AUTOMATION:
+# Instead of running this script interactively, LLMs can simply edit these
+# export variables at the top of this file and then run ./initialize.sh
+#
+# Example for a database management server:
+#   export SERVER_DESCRIPTION="Database management server"
+#   export PACKAGE_NAME="database_manager"
+#   export SERVER_NAME="database-manager"
+#   export DOCKER_IMAGE_NAME="database-mcp-server"
+#   export PROJECT_NAME="my-database-project"
+#   export REPOSITORY_URL="https://github.com/user/my-database-project.git"
+
+export SERVER_DESCRIPTION=""                    # What your MCP server does (e.g., "Database management server")
+export PACKAGE_NAME=""                          # Python package name (lowercase, underscores only, e.g., "database_manager")
+export SERVER_NAME=""                           # Server name for MCP client configs (e.g., "database-manager")
+export DOCKER_IMAGE_NAME=""                     # Docker image name (lowercase, hyphens, e.g., "my-database-server")
+export PROJECT_NAME=""                          # Project name (defaults to current directory name if empty)
+export REPOSITORY_URL=""                        # Repository URL for clone instructions
+
+# ============================================
+
 set -e  # Exit on any error
 
 # Colors for output
@@ -63,6 +90,48 @@ check_if_template() {
 # Function to gather user input
 gather_requirements() {
     print_status "Setting up your MCP server project..."
+    echo
+    
+    # Check if all required variables are set via environment
+    local use_env_config=true
+    if [[ -z "$SERVER_DESCRIPTION" || -z "$PACKAGE_NAME" || -z "$SERVER_NAME" || -z "$DOCKER_IMAGE_NAME" || -z "$REPOSITORY_URL" ]]; then
+        use_env_config=false
+    fi
+    
+    if [[ "$use_env_config" == true ]]; then
+        print_status "Using configuration from environment variables..."
+        
+        # Validate environment variables
+        if ! validate_package_name "$PACKAGE_NAME"; then
+            print_error "Invalid PACKAGE_NAME '$PACKAGE_NAME'. Must be lowercase letters, numbers, and underscores only, starting with a letter."
+            exit 1
+        fi
+        
+        if ! validate_docker_name "$DOCKER_IMAGE_NAME"; then
+            print_error "Invalid DOCKER_IMAGE_NAME '$DOCKER_IMAGE_NAME'. Must be lowercase letters, numbers, and hyphens only, starting with a letter."
+            exit 1
+        fi
+        
+        # Set variables from environment
+        server_description="$SERVER_DESCRIPTION"
+        package_name="$PACKAGE_NAME"
+        server_name="$SERVER_NAME"
+        docker_name="$DOCKER_IMAGE_NAME"
+        repo_url="$REPOSITORY_URL"
+        
+        # Handle project name
+        if [[ -n "$PROJECT_NAME" ]]; then
+            project_name="$PROJECT_NAME"
+        else
+            project_name=$(basename "$PWD")
+        fi
+        
+        print_success "Environment configuration loaded successfully."
+        return
+    fi
+    
+    # Interactive mode - prompt for each value
+    print_status "Environment variables not set, using interactive mode..."
     echo
     
     # Server description
@@ -420,10 +489,15 @@ main() {
     echo "  Repository URL: $repo_url"
     echo
     
-    read -p "Proceed with initialization? (y/N): " confirm
-    if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-        print_error "Initialization cancelled."
-        exit 1
+    # Skip confirmation if using environment variables
+    if [[ -n "$SERVER_DESCRIPTION" && -n "$PACKAGE_NAME" && -n "$SERVER_NAME" && -n "$DOCKER_IMAGE_NAME" && -n "$REPOSITORY_URL" ]]; then
+        print_status "Auto-proceeding with environment configuration..."
+    else
+        read -p "Proceed with initialization? (y/N): " confirm
+        if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+            print_error "Initialization cancelled."
+            exit 1
+        fi
     fi
     
     # Perform the initialization
