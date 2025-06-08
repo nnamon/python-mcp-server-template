@@ -29,6 +29,11 @@ This is a **template repository** for creating MCP (Model Context Protocol) serv
 - If the directory name is `python-mcp-server-template`, this is the template repository
 - If the directory name is anything else, this is likely a spawned project that needs initialization
 
+**IMPORTANT FOR CLAUDE CODE: When initializing a spawned project:**
+1. First gather the user's requirements (what the server will do, package name, etc.)
+2. **THEN IMMEDIATELY RUN `./initialize.sh`** with the gathered information
+3. The script will handle all placeholder replacements and setup automatically
+
 **AUTOMATED INITIALIZATION: Multiple Options**
 
 For spawned projects, choose one of these initialization methods:
@@ -71,7 +76,22 @@ All methods will:
    - Ask: "What will your MCP server do? (e.g., 'manage databases', 'process documents', 'integrate with APIs')"
    - Ask: "What would you like to name your package? (e.g., 'database_manager', 'document_processor')"
 
-2. **Perform template customization by replacing ALL placeholders:**
+2. **CRITICAL: After gathering requirements, RUN the initialization script:**
+   ```bash
+   # First, edit the variables at the top of initialize.sh with the gathered information
+   # Then run:
+   ./initialize.sh
+   ```
+   
+   **The script will automatically:**
+   - Replace all placeholders with the provided values
+   - Rename the package directory
+   - Update all imports
+   - Run tests to verify the setup
+   - Rewrite CLAUDE.md to be project-specific
+   - Clean up template files (including itself)
+
+3. **If initialize.sh is not available or fails, perform manual customization:**
    
    **CRITICAL: Find all placeholders first:**
    ```bash
@@ -91,12 +111,7 @@ All methods will:
    - Update `pyproject.toml` with new name, description, and metadata
    - Replace example tools/resources/prompts with placeholder stubs for their use case
    - Update the main.py description
-
-3. **After customization, REWRITE THIS CLAUDE.md file:**
-   - Replace template instructions with project-specific guidance
-   - Include their specific MCP server purpose and functionality
-   - Keep the development workflow but make it project-specific
-   - Remove template initialization instructions
+   - After customization, REWRITE THIS CLAUDE.md file to be project-specific
 
 ## Development Workflow
 
