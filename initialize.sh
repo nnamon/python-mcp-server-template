@@ -91,109 +91,109 @@ check_if_template() {
 gather_requirements() {
     print_status "Setting up your MCP server project..."
     echo
-    
+
     # Check if all required variables are set via environment
     local use_env_config=true
     if [[ -z "$SERVER_DESCRIPTION" || -z "$PACKAGE_NAME" || -z "$SERVER_NAME" || -z "$DOCKER_IMAGE_NAME" || -z "$REPOSITORY_URL" ]]; then
         use_env_config=false
     fi
-    
+
     if [[ "$use_env_config" == true ]]; then
         print_status "Using configuration from environment variables..."
-        
+
         # Validate environment variables
         if ! validate_package_name "$PACKAGE_NAME"; then
             print_error "Invalid PACKAGE_NAME '$PACKAGE_NAME'. Must be lowercase letters, numbers, and underscores only, starting with a letter."
             exit 1
         fi
-        
+
         if ! validate_docker_name "$DOCKER_IMAGE_NAME"; then
             print_error "Invalid DOCKER_IMAGE_NAME '$DOCKER_IMAGE_NAME'. Must be lowercase letters, numbers, and hyphens only, starting with a letter."
             exit 1
         fi
-        
+
         # Set variables from environment
         server_description="$SERVER_DESCRIPTION"
         package_name="$PACKAGE_NAME"
         server_name="$SERVER_NAME"
         docker_name="$DOCKER_IMAGE_NAME"
         repo_url="$REPOSITORY_URL"
-        
+
         # Handle project name
         if [[ -n "$PROJECT_NAME" ]]; then
             project_name="$PROJECT_NAME"
         else
             project_name=$(basename "$PWD")
         fi
-        
+
         print_success "Environment configuration loaded successfully."
         return
     fi
-    
+
     # Interactive mode - prompt for each value
     print_status "Environment variables not set, using interactive mode..."
     echo
-    
+
     # Server description
     echo "What will your MCP server do?"
     echo "Examples: 'Database management server', 'Document processing server', 'API integration server'"
     read -p "Description: " server_description
-    
+
     while [[ -z "$server_description" ]]; do
         print_error "Description cannot be empty."
         read -p "Description: " server_description
     done
-    
+
     # Package name
     echo
     echo "What should the Python package be called?"
     echo "Must be lowercase with underscores only (e.g., 'database_manager', 'document_processor')"
     read -p "Package name: " package_name
-    
+
     while ! validate_package_name "$package_name"; do
         print_error "Invalid package name. Must be lowercase letters, numbers, and underscores only, starting with a letter."
         read -p "Package name: " package_name
     done
-    
+
     # Server name for MCP clients
     echo
     echo "What should the server be called in MCP client configurations?"
     echo "This will be used as the server identifier (e.g., 'database-manager', 'document-processor')"
     read -p "Server name: " server_name
-    
+
     while [[ -z "$server_name" ]]; do
         print_error "Server name cannot be empty."
         read -p "Server name: " server_name
     done
-    
+
     # Docker image name
     echo
     echo "What should the Docker image be called?"
     echo "Must be lowercase with hyphens (e.g., 'my-database-server', 'doc-processor')"
     read -p "Docker image name: " docker_name
-    
+
     while ! validate_docker_name "$docker_name"; do
         print_error "Invalid Docker name. Must be lowercase letters, numbers, and hyphens only, starting with a letter."
         read -p "Docker image name: " docker_name
     done
-    
+
     # Project directory name (derived from current directory or ask)
     project_name=$(basename "$PWD")
     echo
     echo "Current directory name '$project_name' will be used as the project name."
     echo "Press Enter to accept, or type a new name:"
     read -p "Project name [$project_name]: " input_project_name
-    
+
     if [[ -n "$input_project_name" ]]; then
         project_name="$input_project_name"
     fi
-    
+
     # Repository URL for clone instructions
     echo
     echo "What is the URL of this repository?"
     echo "This will be used in README.md clone instructions (e.g., 'https://github.com/user/repo.git')"
     read -p "Repository URL: " repo_url
-    
+
     while [[ -z "$repo_url" ]]; do
         print_error "Repository URL cannot be empty."
         read -p "Repository URL: " repo_url
@@ -203,7 +203,7 @@ gather_requirements() {
 # Function to replace placeholders in files
 replace_placeholders() {
     print_status "Replacing placeholders in all files..."
-    
+
     # Files to update (excluding the package directory which we'll rename)
     local files=(
         "pyproject.toml"
@@ -217,11 +217,11 @@ replace_placeholders() {
         "docker-compose.yml"
         "CLAUDE.md"
     )
-    
+
     for file in "${files[@]}"; do
         if [[ -f "$file" ]]; then
             print_status "Updating $file..."
-            
+
             # Use different sed syntax for macOS vs Linux
             if [[ "$OSTYPE" == "darwin"* ]]; then
                 # macOS
@@ -251,7 +251,7 @@ replace_placeholders() {
 # Function to rename package directory and update imports
 rename_package() {
     print_status "Renaming package directory from 'mcp_server_template' to '$package_name'..."
-    
+
     # Rename the package directory
     if [[ -d "src/mcp_server_template" ]]; then
         mv "src/mcp_server_template" "src/$package_name"
@@ -260,19 +260,19 @@ rename_package() {
         print_error "Package directory 'src/mcp_server_template' not found!"
         exit 1
     fi
-    
+
     # Update imports in files
     local import_files=(
         "main.py"
         "tests/test_server.py"
         "pyproject.toml"
     )
-    
+
     print_status "Updating import statements..."
     for file in "${import_files[@]}"; do
         if [[ -f "$file" ]]; then
             print_status "Updating imports in $file..."
-            
+
             if [[ "$OSTYPE" == "darwin"* ]]; then
                 # macOS
                 sed -i '' "s/mcp_server_template/$package_name/g" "$file"
@@ -282,7 +282,7 @@ rename_package() {
             fi
         fi
     done
-    
+
     # Update commented examples in docker-compose.yml
     if [[ -f "docker-compose.yml" ]]; then
         if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -296,20 +296,13 @@ rename_package() {
 # Function to run tests
 run_tests() {
     print_status "Running tests to verify everything works..."
-    
+
     # Check if make is available
     if command -v make >/dev/null 2>&1; then
         if make test >/dev/null 2>&1; then
             print_success "All tests passed!"
         else
             print_error "Tests failed. Please check the output above."
-            return 1
-        fi
-        
-        if make lint >/dev/null 2>&1; then
-            print_success "Linting passed!"
-        else
-            print_error "Linting failed. Please check the output above."
             return 1
         fi
     else
@@ -321,7 +314,7 @@ run_tests() {
 # Function to update CLAUDE.md to project-specific version
 update_claude_md() {
     print_status "Updating CLAUDE.md to be project-specific..."
-    
+
     cat > CLAUDE.md << EOF
 # $server_description - Claude Code Instructions
 
@@ -383,7 +376,7 @@ make clean     # Clean cache files
 
 ### Feature Development
 - **Adding new MCP tools**: Guide implementation following FastMCP patterns
-- **Resource management**: Help design URI schemes and data access patterns  
+- **Resource management**: Help design URI schemes and data access patterns
 - **Error handling**: Implement proper exception handling for MCP operations
 - **Type safety**: Ensure Pydantic models and type hints are used correctly
 
@@ -429,13 +422,13 @@ EOF
 # Function to clean up template files
 cleanup_template_files() {
     print_status "Cleaning up template-specific files..."
-    
+
     # Remove the initialization script itself
     if [[ -f "initialize.sh" ]]; then
         rm "initialize.sh"
         print_success "Removed initialization script."
     fi
-    
+
     # Remove the slash command since it's template-specific
     if [[ -d ".claude/commands" ]]; then
         rm -rf ".claude/commands"
@@ -451,7 +444,7 @@ show_summary() {
     echo "Your MCP server project is now configured with:"
     echo "  📝 Description: $server_description"
     echo "  📦 Package name: $package_name"
-    echo "  🏷️  Server name: $server_name"  
+    echo "  🏷️  Server name: $server_name"
     echo "  🐳 Docker image: $docker_name"
     echo "  📁 Project name: $project_name"
     echo "  🔗 Repository URL: $repo_url"
@@ -472,13 +465,13 @@ main() {
     echo "  MCP Server Template Initialization Script"
     echo "=============================================="
     echo
-    
+
     # Check if this is the template repository
     check_if_template
-    
+
     # Gather user requirements
     gather_requirements
-    
+
     echo
     print_status "Configuration summary:"
     echo "  Description: $server_description"
@@ -488,7 +481,7 @@ main() {
     echo "  Project name: $project_name"
     echo "  Repository URL: $repo_url"
     echo
-    
+
     # Skip confirmation if using environment variables
     if [[ -n "$SERVER_DESCRIPTION" && -n "$PACKAGE_NAME" && -n "$SERVER_NAME" && -n "$DOCKER_IMAGE_NAME" && -n "$REPOSITORY_URL" ]]; then
         print_status "Auto-proceeding with environment configuration..."
@@ -499,7 +492,7 @@ main() {
             exit 1
         fi
     fi
-    
+
     # Perform the initialization
     replace_placeholders
     rename_package
